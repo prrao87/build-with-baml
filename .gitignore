@@ -169,3 +169,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+.DS_Store
+movie_db
+test_kuzudb
+test_lancedb
