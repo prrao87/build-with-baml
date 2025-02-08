@@ -1,0 +1,116 @@
+{
+    "nodes": [
+        {
+            "label": "Movie",
+            "properties": [
+                {
+                    "name": "title",
+                    "type": "STRING"
+                },
+                {
+                    "name": "year",
+                    "type": "INT64"
+                },
+                {
+                    "name": "summary",
+                    "type": "STRING"
+                }
+            ]
+        },
+        {
+            "label": "Director",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "STRING"
+                },
+                {
+                    "name": "age",
+                    "type": "INT64"
+                }
+            ]
+        },
+        {
+            "label": "Character",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "STRING"
+                },
+                {
+                    "name": "description",
+                    "type": "STRING"
+                }
+            ]
+        },
+        {
+            "label": "Actor",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "STRING"
+                },
+                {
+                    "name": "age",
+                    "type": "INT64"
+                }
+            ]
+        },
+        {
+            "label": "Writer",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "STRING"
+                },
+                {
+                    "name": "age",
+                    "type": "INT64"
+                }
+            ]
+        }
+    ],
+    "edges": [
+        {
+            "label": "ACTED_IN",
+            "src": "Actor",
+            "dst": "Movie",
+            "properties": []
+        },
+        {
+            "label": "PLAYED_ROLE_IN",
+            "src": "Character",
+            "dst": "Movie",
+            "properties": []
+        },
+        {
+            "label": "DIRECTED",
+            "src": "Director",
+            "dst": "Movie",
+            "properties": []
+        },
+        {
+            "label": "PLAYED",
+            "src": "Actor",
+            "dst": "Character",
+            "properties": []
+        },
+        {
+            "label": "RELATED_TO",
+            "src": "Character",
+            "dst": "Character",
+            "properties": [
+                {
+                    "name": "relationship",
+                    "type": "STRING"
+                }
+            ]
+        },
+        {
+            "label": "WROTE",
+            "src": "Writer",
+            "dst": "Movie",
+            "properties": []
+        }
+    ]
+}

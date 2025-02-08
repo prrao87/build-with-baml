@@ -6,7 +6,7 @@ client<llm> Gemini15Flash {
     model "gemini-1.5-flash"
     api_key env.GOOGLE_API_KEY
     generationConfig {
-      temperature 0.3
+      temperature 0.1
     }
   }
 }
@@ -18,10 +18,11 @@ client<llm> Gemini2FlashLite {
     model "gemini-2.0-flash-lite-preview-02-05"
     api_key env.GOOGLE_API_KEY
     generationConfig {
-      temperature 0.3
+      temperature 0.1
     }
   }
 }
+
 
 client<llm> CustomGPT4o {
   provider openai
@@ -31,7 +32,7 @@ client<llm> CustomGPT4o {
   }
 }
 
-client<llm> GeneratorGPT4oMini {
+client<llm> CustomGPT4oMini {
   provider openai
   retry_policy Exponential
   options {
@@ -64,7 +65,7 @@ client<llm> CustomFast {
   provider round-robin
   options {
     // This will alternate between the two clients
-    strategy [GeneratorGPT4oMini, CustomHaiku]
+    strategy [CustomGPT4oMini, CustomHaiku]
   }
 }
 
@@ -73,7 +74,7 @@ client<llm> OpenaiFallback {
   provider fallback
   options {
     // This will try the clients in order until one succeeds
-    strategy [GeneratorGPT4oMini, GeneratorGPT4oMini]
+    strategy [CustomGPT4oMini, CustomGPT4oMini]
   }
 }
 

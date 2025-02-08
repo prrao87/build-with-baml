@@ -13,11 +13,11 @@ conn = kuzu.Connection(db)
 
 # Define schema
 conn.execute("""
-    CREATE NODE TABLE IF NOT EXISTS Actor(name STRING, age INT64, PRIMARY KEY(name));
-    CREATE NODE TABLE IF NOT EXISTS Movie(title STRING, year INT64, summary STRING, PRIMARY KEY(title));
-    CREATE NODE TABLE IF NOT EXISTS Director(name STRING, age INT64, PRIMARY KEY(name));
-    CREATE NODE TABLE IF NOT EXISTS Character(name STRING, description STRING, PRIMARY KEY(name));
-    CREATE NODE TABLE IF NOT EXISTS Writer(name STRING, age INT64, PRIMARY KEY(name));
+    CREATE NODE TABLE IF NOT EXISTS Actor(name STRING PRIMARY KEY, age INT64);
+    CREATE NODE TABLE IF NOT EXISTS Movie(title STRING PRIMARY KEY, year INT64, summary STRING, plot STRING);
+    CREATE NODE TABLE IF NOT EXISTS Director(name STRING PRIMARY KEY, age INT64);
+    CREATE NODE TABLE IF NOT EXISTS Character(name STRING PRIMARY KEY, description STRING);
+    CREATE NODE TABLE IF NOT EXISTS Writer(name STRING PRIMARY KEY, age INT64);
     CREATE REL TABLE IF NOT EXISTS ACTED_IN(FROM Actor TO Movie);
     CREATE REL TABLE IF NOT EXISTS PLAYED(FROM Actor TO Character);
     CREATE REL TABLE IF NOT EXISTS DIRECTED(FROM Director TO Movie);
@@ -27,10 +27,9 @@ conn.execute("""
 """)
 
 # Ingest data
-base_path = "./data"
+base_path = "../../data"
 files = {
     "Actor": "actor.csv",
-    "Movie": "movie.csv",
     "Director": "director.csv",
     "Character": "character.csv",
     "Writer": "writer.csv",
@@ -42,18 +41,26 @@ files = {
     "WROTE": "wrote.csv",
 }
 
+# Read in movie data with a `|` separator instead as this file is formatted differently
+conn.execute(f"COPY Movie FROM '{base_path}/movie.csv' (DELIM='|');")
+
+# Read in the rest of the data
 for table, file in files.items():
     conn.execute(f"COPY {table} FROM '{base_path}/{file}';")
+
+
 print("Finished ingesting data")
 
 # Use an OpenAI embedding model to store a vector embedding of the "summary" property in the movie node
 df = pl.read_csv(
     f"{base_path}/movie.csv",
-    has_header=False
+    has_header=False,
+    separator="|",
 ).rename({
     "column_1": "title",
     "column_2": "year",
-    "column_3": "summary"
+    "column_3": "summary",
+    "column_4": "plot",
 })
 # Query the graph to check what we have
 print("---\nHere are the actors and the characters they played in Interstellar:")
