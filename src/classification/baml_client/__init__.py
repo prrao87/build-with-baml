@@ -13,9 +13,15 @@
 # flake8: noqa: E501,F401
 # pylint: disable=unused-import,line-too-long
 # fmt: off
-from . import partial_types, tracing, types
+from . import types
+from . import tracing
+from . import partial_types
 from .globals import reset_baml_env_vars
+
+
 from .sync_client import b
+
+
 
 __all__ = [
   "b",

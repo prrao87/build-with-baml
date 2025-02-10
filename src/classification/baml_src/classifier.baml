@@ -14,8 +14,7 @@ enum Genre {
 }
 
 class Output {
-    genres Genre[]
-    @@assert(genres_length_limit, {{ this.genres|length <= 3 }})
+    genres Genre[] @assert(genres_length_limit, {{ this|length <= 3 }})
 }
 
 
