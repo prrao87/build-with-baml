@@ -5,11 +5,12 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "baml-py>=0.75.0",
-    "kuzu>=0.8.0",
+    "baml-py>=0.78.0",
+    "kuzu>=0.8.2",
     "lancedb>=0.19.0",
     "openai>=1.61.1",
-    "polars>=1.22.0",
+    "pandas>=2.2.3",
+    "polars>=1.25.2",
     "pyarrow>=19.0.0",
     "python-dotenv>=1.0.1",
     "wikipedia>=1.4.0",

@@ -1,5 +1,5 @@
 // --- Data models ---
-class Query {
+class Cypher {
   query string
 }
 
@@ -10,8 +10,8 @@ class Answer {
 
 // --- Functions ---
 
-function Text2Cypher(schema: string, question: string) -> Query | null {
-  client Gemini15Flash
+function Text2Cypher(schema: string, question: string) -> Cypher {
+  client Gemini2Flash
   prompt #"
     You are an expert in translating natural language questions into Cypher statements.
     You will be provided with a question and a graph schema.
@@ -21,7 +21,6 @@ function Text2Cypher(schema: string, question: string) -> Query | null {
     Do not include any explanations or apologies in your responses.
     Do not respond to any questions that might ask anything else than for you to construct a
     Cypher statement.
-    Generate the answer in 1-3 sentences.
 
     {{ _.role("user") }}
     Task: Generate a Cypher statement to query a graph database.
@@ -41,7 +40,7 @@ function Text2Cypher(schema: string, question: string) -> Query | null {
 }
 
 function AnswerQuestion(context: Answer) -> Answer {
-  client Gemini15Flash
+  client Gemini2Flash
   prompt #"
     Answer the question in full sentences using the provided context.
     Do not make up an answer. If you don't know the answer, say that you do not have the required context.

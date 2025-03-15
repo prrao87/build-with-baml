@@ -2,7 +2,7 @@
 #
 #  Welcome to Baml! To use this generated code, please run the following:
 #
-#  $ pip install baml
+#  $ pip install baml-py
 #
 ###############################################################################
 
@@ -38,5 +38,5 @@ class Answer(BaseModel):
     question: Optional[str] = None
     answer: Optional[str] = None
 
-class Query(BaseModel):
+class Cypher(BaseModel):
     query: Optional[str] = None

@@ -2,7 +2,7 @@
 #
 #  Welcome to Baml! To use this generated code, please run the following:
 #
-#  $ pip install baml
+#  $ pip install baml-py
 #
 ###############################################################################
 
@@ -35,4 +35,4 @@ class StreamState(BaseModel, Generic[T]):
 
 
 class Output(BaseModel):
-    genres: List[Optional[types.Genre]]
+    genres: List[types.Genre]
