@@ -1,24 +1,21 @@
 // Learn more about clients at https://docs.boundaryml.com/docs/snippets/clients/overview
 
+client<llm> GTP4oMini {
+  provider openai
+  options {
+    model "gpt-4o-mini"
+    api_key env.OPENAI_API_KEY
+    temperature 0.1
+  }
+}
+
 client<llm> OpenRouterGPT4oMini {
   provider "openai-generic"
   options {
     base_url "https://openrouter.ai/api/v1"
     api_key env.OPENROUTER_API_KEY
     model "openai/gpt-4o-mini"
-    headers {
-      "HTTP-Referer" "https://thedataquarry.com" // Optional
-      "X-Title" "thedataquarry" // Optional
-    }
-  }
-}
-
-client<llm> OpenRouterGemma3_27b {
-  provider "openai-generic"
-  options {
-    base_url "https://openrouter.ai/api/v1"
-    api_key env.OPENROUTER_API_KEY
-    model "google/gemma-3-27b-it:free"
+    temperature 0.1
     headers {
       "HTTP-Referer" "https://thedataquarry.com" // Optional
       "X-Title" "thedataquarry" // Optional
@@ -34,6 +31,7 @@ client<llm> Inferix_Gemma3_27b {
     api_key env.INFERIX_API_KEY
     model "gemma3:27b"
     max_tokens 500
+    temperature 0.1
   }
 }
 
@@ -44,14 +42,7 @@ client<llm> Inferix_Gemma3_12b {
     api_key env.INFERIX_API_KEY
     model "gemma3:12b"
     max_tokens 500
-  }
-}
-
-client<llm> Ollama_Gemma3_27b {
-  provider "openai-generic"
-  options {
-    base_url "http://localhost:11434/v1"
-    model "gemma3:27b"
+    temperature 0.1
   }
 }
 

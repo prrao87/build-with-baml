@@ -49,7 +49,7 @@ if __name__ == "__main__":
     for movie in movies:
         plot = extract_movie_plot(movie)
         # Output the plots to files so we can use them for RAG
-        output_path = Path("data") / "movie_plots"
+        output_path = Path("../../data") / "movies" / "plots"
         output_path.mkdir(parents=True, exist_ok=True)
         if plot:
             with open(output_path / f"{movie}.txt", "w") as f:

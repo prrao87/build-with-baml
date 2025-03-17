@@ -1,11 +1,13 @@
+// Acceptable outputs from the LLM
 enum Gender {
   Male
   Female
-  Unknown
+  Unknown @description("When you are not sure of the final answer")
 }
 
+// Conventional prompting
 function ClassifyGender(info: string) -> Gender {
-  client Inferix_Gemma3_27b
+  client GTP4oMini
   prompt #"
     Based on your knowledge of historical scholars and scientists, determine the likely gender of this person.
     Scholars who are termed "laureates" won the Nobel Prize in a category.
@@ -19,7 +21,26 @@ function ClassifyGender(info: string) -> Gender {
   "#
 }
 
+// Chain-of-Draft (CoD) prompting
+function ClassifyGenderCoD(info: string) -> Gender {
+  client GTP4oMini
+  prompt #"
+    Based on your knowledge of historical scholars and scientists, determine the likely gender of this person.
+    Scholars who are termed "laureates" won the Nobel Prize in a category.
 
+    ONLY respond with one gender.
+
+    {{ ctx.output_format }}
+
+    Think step by step before answering. Only keep a minimum draft for each thinking step, with 10 words at most. Make sure you try to recall the answer from your internal memory.
+    Return the final JSON object at the end of the thinking process.
+
+    {{ _.role("user") }}
+    {{ info }}
+  "#
+}
+
+// Conventional prompting tests
 test ClassifyAaronKlug {
   functions [ClassifyGender]
   args {
@@ -63,3 +84,17 @@ test ClassifyAndreaGhez {
   }
 }
 
+// Test with Chain-of-Draft (CoD) prompting
+test ClassifyAimeCotton {
+  functions [ClassifyGenderCoD]
+  args {
+    info "name: Aime Cotton\ninfo: scholar"
+  }
+}
+
+test ClassifyLeonorMichaelis {
+  functions [ClassifyGenderCoD]
+  args {
+    info "name: Leonor Michaelis\ninfo: scholar"
+  }
+}

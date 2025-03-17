@@ -13,17 +13,20 @@
 # flake8: noqa: E501,F401
 # pylint: disable=unused-import,line-too-long
 # fmt: off
-from typing import Any, Dict, List, Optional, TypeVar, Union, TypedDict, Type, Literal, cast
-from typing_extensions import NotRequired
 import pprint
+from typing import Any, Dict, List, Literal, Optional, Type, TypedDict, TypeVar, Union, cast
 
 import baml_py
 from pydantic import BaseModel, ValidationError, create_model
+from typing_extensions import NotRequired
 
 from . import partial_types, types
-from .types import Checked, Check
+from .globals import (
+    DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_CTX,
+    DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME,
+)
 from .type_builder import TypeBuilder
-from .globals import DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_CTX, DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME
+from .types import Check, Checked
 
 OutputType = TypeVar('OutputType')
 
@@ -74,6 +77,32 @@ class BamlSyncClient:
       )
       return cast(types.Gender, raw.cast_to(types, types, partial_types, False))
     
+    def ClassifyGenderCoD(
+        self,
+        info: str,
+        baml_options: BamlCallOptions = {},
+    ) -> types.Gender:
+      __tb__ = baml_options.get("tb", None)
+      if __tb__ is not None:
+        tb = __tb__._tb # type: ignore (we know how to use this private attribute)
+      else:
+        tb = None
+      __cr__ = baml_options.get("client_registry", None)
+      collector = baml_options.get("collector", None)
+      collectors = collector if isinstance(collector, list) else [collector] if collector is not None else []
+
+      raw = self.__runtime.call_function_sync(
+        "ClassifyGenderCoD",
+        {
+          "info": info,
+        },
+        self.__ctx_manager.get(),
+        tb,
+        __cr__,
+        collectors,
+      )
+      return cast(types.Gender, raw.cast_to(types, types, partial_types, False))
+    
 
 
 
@@ -102,6 +131,39 @@ class BamlStreamClient:
 
       raw = self.__runtime.stream_function_sync(
         "ClassifyGender",
+        {
+          "info": info,
+        },
+        None,
+        self.__ctx_manager.get(),
+        tb,
+        __cr__,
+        collectors,
+      )
+
+      return baml_py.BamlSyncStream[Optional[types.Gender], types.Gender](
+        raw,
+        lambda x: cast(Optional[types.Gender], x.cast_to(types, types, partial_types, True)),
+        lambda x: cast(types.Gender, x.cast_to(types, types, partial_types, False)),
+        self.__ctx_manager.get(),
+      )
+    
+    def ClassifyGenderCoD(
+        self,
+        info: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlSyncStream[Optional[types.Gender], types.Gender]:
+      __tb__ = baml_options.get("tb", None)
+      if __tb__ is not None:
+        tb = __tb__._tb # type: ignore (we know how to use this private attribute)
+      else:
+        tb = None
+      __cr__ = baml_options.get("client_registry", None)
+      collector = baml_options.get("collector", None)
+      collectors = collector if isinstance(collector, list) else [collector] if collector is not None else []
+
+      raw = self.__runtime.stream_function_sync(
+        "ClassifyGenderCoD",
         {
           "info": info,
         },

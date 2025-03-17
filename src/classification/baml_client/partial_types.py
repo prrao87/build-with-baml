@@ -13,13 +13,14 @@
 # flake8: noqa: E501,F401
 # pylint: disable=unused-import,line-too-long
 # fmt: off
-import baml_py
 from enum import Enum
+from typing import Dict, Generic, List, Literal, Optional, TypeVar, Union
+
+import baml_py
 from pydantic import BaseModel, ConfigDict
-from typing import Dict, Generic, List, Optional, TypeVar, Union, Literal
 
 from . import types
-from .types import Checked, Check
+from .types import Check, Checked
 
 ###############################################################################
 #
