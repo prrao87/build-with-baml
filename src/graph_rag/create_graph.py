@@ -27,22 +27,22 @@ conn.execute("""
 """)
 
 # Ingest data
-base_path = "../../data"
+base_path = "../../data/movies"
 files = {
-    "Actor": "actor.csv",
-    "Director": "director.csv",
-    "Character": "character.csv",
-    "Writer": "writer.csv",
-    "ACTED_IN": "acted_in.csv",
-    "DIRECTED": "directed.csv",
-    "PLAYED": "played.csv",
-    "PLAYED_ROLE_IN": "played_role_in.csv",
-    "RELATED_TO": "related_to.csv",
-    "WROTE": "wrote.csv",
+    "Actor": "nodes/actor.csv",
+    "Director": "nodes/director.csv",
+    "Character": "nodes/character.csv",
+    "Writer": "nodes/writer.csv",
+    "ACTED_IN": "edges/acted_in.csv",
+    "DIRECTED": "edges/directed.csv",
+    "PLAYED": "edges/played.csv",
+    "PLAYED_ROLE_IN": "edges/played_role_in.csv",
+    "RELATED_TO": "edges/related_to.csv",
+    "WROTE": "edges/wrote.csv",
 }
 
 # Read in movie data with a `|` separator instead as this file is formatted differently
-conn.execute(f"COPY Movie FROM '{base_path}/movie.csv' (DELIM='|');")
+conn.execute(f"COPY Movie FROM '{base_path}/nodes/movie.csv' (DELIM='|');")
 
 # Read in the rest of the data
 for table, file in files.items():
@@ -53,7 +53,7 @@ print("Finished ingesting data")
 
 # Use an OpenAI embedding model to store a vector embedding of the "summary" property in the movie node
 df = pl.read_csv(
-    f"{base_path}/movie.csv",
+    f"{base_path}/nodes/movie.csv",
     has_header=False,
     separator="|",
 ).rename({
@@ -71,6 +71,6 @@ res = conn.execute(
     RETURN DISTINCT a.name, c.name
     """
 )
-while res.has_next():
-    data = res.get_next()
+while res.has_next():   # type: ignore
+    data = res.get_next()  # type: ignore
     print(f"{data[0]} -> {data[1]}")

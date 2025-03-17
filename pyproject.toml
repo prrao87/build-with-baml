@@ -5,19 +5,23 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "baml-py>=0.75.0",
-    "kuzu>=0.8.0",
+    "baml-py>=0.78.0",
+    "kuzu>=0.8.2",
     "lancedb>=0.19.0",
     "openai>=1.61.1",
-    "polars>=1.22.0",
+    "pandas>=2.2.3",
+    "polars>=1.25.2",
     "pyarrow>=19.0.0",
     "python-dotenv>=1.0.1",
+    "rich>=13.9.4",
     "wikipedia>=1.4.0",
 ]
 
 [dependency-groups]
 dev = [
+    "bs4>=0.0.2",
     "ipykernel>=6.29.5",
+    "requests>=2.32.3",
 ]
 
 [tool.ruff]

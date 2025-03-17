@@ -1,79 +1,57 @@
 // Learn more about clients at https://docs.boundaryml.com/docs/snippets/clients/overview
 
-client<llm> Gemini15Flash {
-  provider google-ai
+client<llm> OpenRouterGPT4oMini {
+  provider "openai-generic"
   options {
-    model "gemini-1.5-flash"
-    api_key env.GOOGLE_API_KEY
-    generationConfig {
-      temperature 0.1
+    base_url "https://openrouter.ai/api/v1"
+    api_key env.OPENROUTER_API_KEY
+    model "openai/gpt-4o-mini"
+    headers {
+      "HTTP-Referer" "https://thedataquarry.com" // Optional
+      "X-Title" "thedataquarry" // Optional
     }
   }
 }
 
-
-client<llm> Gemini2FlashLite {
-  provider google-ai
+client<llm> OpenRouterGemma3_27b {
+  provider "openai-generic"
   options {
-    model "gemini-2.0-flash-lite-preview-02-05"
-    api_key env.GOOGLE_API_KEY
-    generationConfig {
-      temperature 0.1
+    base_url "https://openrouter.ai/api/v1"
+    api_key env.OPENROUTER_API_KEY
+    model "google/gemma-3-27b-it:free"
+    headers {
+      "HTTP-Referer" "https://thedataquarry.com" // Optional
+      "X-Title" "thedataquarry" // Optional
     }
   }
 }
 
-
-client<llm> CustomGPT4o {
-  provider openai
+// Custom LLM inference server by YourTechBud
+client<llm> Inferix_Gemma3_27b {
+  provider openai-generic
   options {
-    model "gpt-4o"
-    api_key env.OPENAI_API_KEY
+    base_url "https://inferix.yourtechbud.studio/inferix/v1/llm"
+    api_key env.INFERIX_API_KEY
+    model "gemma3:27b"
+    max_tokens 500
   }
 }
 
-client<llm> CustomGPT4oMini {
-  provider openai
-  retry_policy Exponential
+client<llm> Inferix_Gemma3_12b {
+  provider openai-generic
   options {
-    model "gpt-4o-mini"
-    api_key env.OPENAI_API_KEY
+    base_url "https://inferix.yourtechbud.studio/inferix/v1/llm"
+    api_key env.INFERIX_API_KEY
+    model "gemma3:12b"
+    max_tokens 500
   }
 }
 
-client<llm> CustomSonnet {
-  provider anthropic
+client<llm> Ollama_Gemma3_27b {
+  provider "openai-generic"
   options {
-    model "claude-3-5-sonnet-20241022"
-    api_key env.ANTHROPIC_API_KEY
-  }
-}
-
-
-client<llm> CustomHaiku {
-  provider anthropic
-  retry_policy Constant
-  options {
-    model "claude-3-haiku-20240307"
-    api_key env.ANTHROPIC_API_KEY
-  }
-}
-
-// https://docs.boundaryml.com/docs/snippets/clients/round-robin
-client<llm> CustomFast {
-  provider round-robin
-  options {
-    // This will alternate between the two clients
-    strategy [CustomGPT4oMini, CustomHaiku]
-  }
-}
-
-// https://docs.boundaryml.com/docs/snippets/clients/fallback
-client<llm> OpenaiFallback {
-  provider fallback
-  options {
-    // This will try the clients in order until one succeeds
-    strategy [CustomGPT4oMini, CustomGPT4oMini]
+    base_url "http://localhost:11434/v1"
+    model "gemma3:27b"
   }
 }
 
@@ -93,7 +71,7 @@ retry_policy Exponential {
   strategy {
     type exponential_backoff
     delay_ms 300
-    mutliplier 1.5
+    multiplier 1.5
     max_delay_ms 10000
   }
 }

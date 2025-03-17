@@ -19,7 +19,7 @@ class Context {
 
 // --- Functions ---
 function AnswerQuestion(question: string, context: Context) -> Answer {
-  client Gemini15Flash
+  client CustomGPT4oMini
   prompt #"
     Answer the question using the provided context.
     Do not make up an answer. If you don't know the answer, return a null response.

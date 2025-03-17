@@ -1,9 +1,17 @@
 // Learn more about clients at https://docs.boundaryml.com/docs/snippets/clients/overview
 
-client<llm> Gemini15Flash {
+client<llm> LMStudio {
+  provider "openai-generic"
+  options {
+    base_url "http://localhost:1234/v1"
+    model "Mistral-7B-Instruct-v0.3-GGUF"
+  }
+}
+
+client<llm> Gemini2Flash {
   provider google-ai
   options {
-    model "gemini-1.5-flash"
+    model "gemini-2.0-flash"
     api_key env.GOOGLE_API_KEY
     generationConfig {
       temperature 0.3
@@ -31,7 +39,7 @@ client<llm> CustomGPT4o {
   }
 }
 
-client<llm> GeneratorGPT4oMini {
+client<llm> CustomGPT4oMini {
   provider openai
   retry_policy Exponential
   options {
@@ -64,7 +72,7 @@ client<llm> CustomFast {
   provider round-robin
   options {
     // This will alternate between the two clients
-    strategy [GeneratorGPT4oMini, CustomHaiku]
+    strategy [CustomGPT4oMini, CustomHaiku]
   }
 }
 
@@ -73,7 +81,7 @@ client<llm> OpenaiFallback {
   provider fallback
   options {
     // This will try the clients in order until one succeeds
-    strategy [GeneratorGPT4oMini, GeneratorGPT4oMini]
+    strategy [CustomGPT4oMini, CustomGPT4o]
   }
 }
 

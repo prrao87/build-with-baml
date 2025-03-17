@@ -19,16 +19,16 @@ class GetSchema:
         for node in nodes:
             node_schema = {"label": node, "properties": []}
             node_properties = self.conn.execute(f"CALL TABLE_INFO('{node}') RETURN *;")
-            while node_properties.has_next():
-                row = node_properties.get_next()
+            while node_properties.has_next():  # type: ignore
+                row = node_properties.get_next()  # type: ignore
                 node_schema["properties"].append({"name": row[1], "type": row[2]})
             schema["nodes"].append(node_schema)
 
         for rel in relationships:
             edge = {"label": rel["name"], "src": rel["src"], "dst": rel["dst"], "properties": []}
             rel_properties = self.conn.execute(f"""CALL TABLE_INFO('{rel["name"]}') RETURN *;""")
-            while rel_properties.has_next():
-                row = rel_properties.get_next()
+            while rel_properties.has_next():  # type: ignore
+                row = rel_properties.get_next()  # type: ignore
                 edge["properties"].append({"name": row[1], "type": row[2]})
             schema["edges"].append(edge)
 
@@ -67,8 +67,8 @@ def run_query(conn: kuzu.Connection, question: str, cypher: str) -> Answer:
     """Use the generated Cypher statement to query the graph database."""
     response = conn.execute(cypher)
     result = []
-    while response.has_next():
-        item = response.get_next()
+    while response.has_next():  # type: ignore
+        item = response.get_next()  # type: ignore
         if item not in result:
             result.extend(item)
 
@@ -104,6 +104,6 @@ if __name__ == "__main__":
             cypher = output.query
             print(cypher)
             context = run_query(conn, question, cypher)
-            print(context)
             answer = b.AnswerQuestion(context)
             print(answer)
+            print("-" * 10)

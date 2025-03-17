@@ -2,7 +2,7 @@
 #
 #  Welcome to Baml! To use this generated code, please run the following:
 #
-#  $ pip install baml
+#  $ pip install baml-py
 #
 ###############################################################################
 
@@ -14,11 +14,12 @@
 # pylint: disable=unused-import,line-too-long
 # fmt: off
 import os
+from typing import Dict
 
 from baml_py import BamlCtxManager, BamlRuntime
 from baml_py.baml_py import BamlError
+
 from .inlinedbaml import get_baml_files
-from typing import Dict
 
 DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME = BamlRuntime.from_files(
   "baml_src",

@@ -2,7 +2,7 @@
 #
 #  Welcome to Baml! To use this generated code, please run the following:
 #
-#  $ pip install baml
+#  $ pip install baml-py
 #
 ###############################################################################
 
@@ -31,6 +31,7 @@ OutputType = TypeVar('OutputType')
 class BamlCallOptions(TypedDict, total=False):
     tb: NotRequired[TypeBuilder]
     client_registry: NotRequired[baml_py.baml_py.ClientRegistry]
+    collector: NotRequired[Union[baml_py.baml_py.Collector, List[baml_py.baml_py.Collector]]]
 
 class BamlSyncClient:
     __runtime: baml_py.BamlRuntime
@@ -47,28 +48,31 @@ class BamlSyncClient:
       return self.__stream_client
 
     
-    def ClassifyMovie(
+    def ClassifyGender(
         self,
-        title: str,plot: str,
+        info: str,
         baml_options: BamlCallOptions = {},
-    ) -> types.Output:
+    ) -> types.Gender:
       __tb__ = baml_options.get("tb", None)
       if __tb__ is not None:
         tb = __tb__._tb # type: ignore (we know how to use this private attribute)
       else:
         tb = None
       __cr__ = baml_options.get("client_registry", None)
+      collector = baml_options.get("collector", None)
+      collectors = collector if isinstance(collector, list) else [collector] if collector is not None else []
 
       raw = self.__runtime.call_function_sync(
-        "ClassifyMovie",
+        "ClassifyGender",
         {
-          "title": title,"plot": plot,
+          "info": info,
         },
         self.__ctx_manager.get(),
         tb,
         __cr__,
+        collectors,
       )
-      return cast(types.Output, raw.cast_to(types, types, partial_types, False))
+      return cast(types.Gender, raw.cast_to(types, types, partial_types, False))
     
 
 
@@ -82,34 +86,36 @@ class BamlStreamClient:
       self.__ctx_manager = ctx_manager
 
     
-    def ClassifyMovie(
+    def ClassifyGender(
         self,
-        title: str,plot: str,
+        info: str,
         baml_options: BamlCallOptions = {},
-    ) -> baml_py.BamlSyncStream[partial_types.Output, types.Output]:
+    ) -> baml_py.BamlSyncStream[Optional[types.Gender], types.Gender]:
       __tb__ = baml_options.get("tb", None)
       if __tb__ is not None:
         tb = __tb__._tb # type: ignore (we know how to use this private attribute)
       else:
         tb = None
       __cr__ = baml_options.get("client_registry", None)
+      collector = baml_options.get("collector", None)
+      collectors = collector if isinstance(collector, list) else [collector] if collector is not None else []
 
       raw = self.__runtime.stream_function_sync(
-        "ClassifyMovie",
+        "ClassifyGender",
         {
-          "title": title,
-          "plot": plot,
+          "info": info,
         },
         None,
         self.__ctx_manager.get(),
         tb,
         __cr__,
+        collectors,
       )
 
-      return baml_py.BamlSyncStream[partial_types.Output, types.Output](
+      return baml_py.BamlSyncStream[Optional[types.Gender], types.Gender](
         raw,
-        lambda x: cast(partial_types.Output, x.cast_to(types, types, partial_types, True)),
-        lambda x: cast(types.Output, x.cast_to(types, types, partial_types, False)),
+        lambda x: cast(Optional[types.Gender], x.cast_to(types, types, partial_types, True)),
+        lambda x: cast(types.Gender, x.cast_to(types, types, partial_types, False)),
         self.__ctx_manager.get(),
       )
     

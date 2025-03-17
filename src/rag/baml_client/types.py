@@ -2,7 +2,7 @@
 #
 #  Welcome to Baml! To use this generated code, please run the following:
 #
-#  $ pip install baml
+#  $ pip install baml-py
 #
 ###############################################################################
 
@@ -13,11 +13,12 @@
 # flake8: noqa: E501,F401
 # pylint: disable=unused-import,line-too-long
 # fmt: off
-import baml_py
 from enum import Enum
-from pydantic import BaseModel, ConfigDict
-from typing import Dict, Generic, List, Literal, Optional, TypeVar, Union, TypeAlias
+from typing import Dict, Generic, List, Literal, Optional, TypeVar, Union
 
+import baml_py
+from pydantic import BaseModel, ConfigDict
+from typing_extensions import TypeAlias
 
 T = TypeVar('T')
 CheckName = TypeVar('CheckName', bound=str)
@@ -40,16 +41,16 @@ def all_succeeded(checks: Dict[CheckName, Check]) -> bool:
 
 
 class Answer(BaseModel):
-    title: Union[str, Optional[None]]
+    title: Union[str, Optional[None]] = None
     question: str
-    answer: Union[str, Optional[None]]
+    answer: Union[str, Optional[None]] = None
 
 class Context(BaseModel):
     documents: List["Document"]
 
 class Document(BaseModel):
-    title: Union[str, Optional[None]]
-    year: Union[int, Optional[None]]
-    summary: Union[str, Optional[None]]
-    plot: Union[str, Optional[None]]
+    title: Union[str, Optional[None]] = None
+    year: Union[int, Optional[None]] = None
+    summary: Union[str, Optional[None]] = None
+    plot: Union[str, Optional[None]] = None
     distance: float

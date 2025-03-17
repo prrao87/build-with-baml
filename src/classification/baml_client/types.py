@@ -2,7 +2,7 @@
 #
 #  Welcome to Baml! To use this generated code, please run the following:
 #
-#  $ pip install baml
+#  $ pip install baml-py
 #
 ###############################################################################
 
@@ -16,7 +16,8 @@
 import baml_py
 from enum import Enum
 from pydantic import BaseModel, ConfigDict
-from typing import Dict, Generic, List, Literal, Optional, TypeVar, Union, TypeAlias
+from typing_extensions import TypeAlias
+from typing import Dict, Generic, List, Literal, Optional, TypeVar, Union
 
 
 T = TypeVar('T')
@@ -39,18 +40,8 @@ def all_succeeded(checks: Dict[CheckName, Check]) -> bool:
 
 
 
-class Genre(str, Enum):
+class Gender(str, Enum):
     
-    SciFi = "SciFi"
-    Romance = "Romance"
-    Historical = "Historical"
-    Fantasy = "Fantasy"
-    Mystery = "Mystery"
-    Horror = "Horror"
-    Thriller = "Thriller"
-    Drama = "Drama"
-    War = "War"
-    Other = "Other"
-
-class Output(BaseModel):
-    genres: List["Genre"]
+    Male = "Male"
+    Female = "Female"
+    Unknown = "Unknown"

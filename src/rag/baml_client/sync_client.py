@@ -2,7 +2,7 @@
 #
 #  Welcome to Baml! To use this generated code, please run the following:
 #
-#  $ pip install baml
+#  $ pip install baml-py
 #
 ###############################################################################
 
@@ -13,17 +13,20 @@
 # flake8: noqa: E501,F401
 # pylint: disable=unused-import,line-too-long
 # fmt: off
-from typing import Any, Dict, List, Optional, TypeVar, Union, TypedDict, Type, Literal, cast
-from typing_extensions import NotRequired
 import pprint
+from typing import Any, Dict, List, Literal, Optional, Type, TypedDict, TypeVar, Union, cast
 
 import baml_py
 from pydantic import BaseModel, ValidationError, create_model
+from typing_extensions import NotRequired
 
 from . import partial_types, types
-from .types import Checked, Check
+from .globals import (
+    DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_CTX,
+    DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME,
+)
 from .type_builder import TypeBuilder
-from .globals import DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_CTX, DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME
+from .types import Check, Checked
 
 OutputType = TypeVar('OutputType')
 
@@ -31,6 +34,7 @@ OutputType = TypeVar('OutputType')
 class BamlCallOptions(TypedDict, total=False):
     tb: NotRequired[TypeBuilder]
     client_registry: NotRequired[baml_py.baml_py.ClientRegistry]
+    collector: NotRequired[Union[baml_py.baml_py.Collector, List[baml_py.baml_py.Collector]]]
 
 class BamlSyncClient:
     __runtime: baml_py.BamlRuntime
@@ -58,6 +62,8 @@ class BamlSyncClient:
       else:
         tb = None
       __cr__ = baml_options.get("client_registry", None)
+      collector = baml_options.get("collector", None)
+      collectors = collector if isinstance(collector, list) else [collector] if collector is not None else []
 
       raw = self.__runtime.call_function_sync(
         "AnswerQuestion",
@@ -67,6 +73,7 @@ class BamlSyncClient:
         self.__ctx_manager.get(),
         tb,
         __cr__,
+        collectors,
       )
       return cast(types.Answer, raw.cast_to(types, types, partial_types, False))
     
@@ -93,6 +100,8 @@ class BamlStreamClient:
       else:
         tb = None
       __cr__ = baml_options.get("client_registry", None)
+      collector = baml_options.get("collector", None)
+      collectors = collector if isinstance(collector, list) else [collector] if collector is not None else []
 
       raw = self.__runtime.stream_function_sync(
         "AnswerQuestion",
@@ -104,6 +113,7 @@ class BamlStreamClient:
         self.__ctx_manager.get(),
         tb,
         __cr__,
+        collectors,
       )
 
       return baml_py.BamlSyncStream[partial_types.Answer, types.Answer](

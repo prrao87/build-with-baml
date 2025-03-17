@@ -17,7 +17,7 @@ def embed(text: str) -> list:
 
 
 if __name__ == "__main__":
-    data = pl.read_csv("../../data/movie.csv", has_header=False, separator="|", new_columns=["title", "year", "summary", "plot"])
+    data = pl.read_csv("../../data/movies/nodes/movie.csv", has_header=False, separator="|", new_columns=["title", "year", "summary", "plot"])
     # Generate embeddings for the plot column
     data = data.with_columns(
         pl.col("plot").map_elements(embed, return_dtype=pl.List(pl.Float64)).alias("vector")

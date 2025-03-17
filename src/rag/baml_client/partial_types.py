@@ -2,7 +2,7 @@
 #
 #  Welcome to Baml! To use this generated code, please run the following:
 #
-#  $ pip install baml
+#  $ pip install baml-py
 #
 ###############################################################################
 
@@ -13,13 +13,14 @@
 # flake8: noqa: E501,F401
 # pylint: disable=unused-import,line-too-long
 # fmt: off
-import baml_py
 from enum import Enum
+from typing import Dict, Generic, List, Literal, Optional, TypeVar, Union
+
+import baml_py
 from pydantic import BaseModel, ConfigDict
-from typing import Dict, Generic, List, Optional, TypeVar, Union, Literal
 
 from . import types
-from .types import Checked, Check
+from .types import Check, Checked
 
 ###############################################################################
 #
@@ -35,16 +36,16 @@ class StreamState(BaseModel, Generic[T]):
 
 
 class Answer(BaseModel):
-    title: Optional[Union[Optional[str], Optional[None]]] = None
+    title: Optional[Union[str, Optional[None]]] = None
     question: Optional[str] = None
-    answer: Optional[Union[Optional[str], Optional[None]]] = None
+    answer: Optional[Union[str, Optional[None]]] = None
 
 class Context(BaseModel):
     documents: List["Document"]
 
 class Document(BaseModel):
-    title: Optional[Union[Optional[str], Optional[None]]] = None
-    year: Optional[Union[Optional[int], Optional[None]]] = None
-    summary: Optional[Union[Optional[str], Optional[None]]] = None
-    plot: Optional[Union[Optional[str], Optional[None]]] = None
+    title: Optional[Union[str, Optional[None]]] = None
+    year: Optional[Union[int, Optional[None]]] = None
+    summary: Optional[Union[str, Optional[None]]] = None
+    plot: Optional[Union[str, Optional[None]]] = None
     distance: Optional[float] = None
