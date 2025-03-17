@@ -33,6 +33,3 @@ class StreamState(BaseModel, Generic[T]):
     value: T
     state: Literal["Pending", "Incomplete", "Complete"]
 
-
-class Output(BaseModel):
-    genres: List[types.Genre]

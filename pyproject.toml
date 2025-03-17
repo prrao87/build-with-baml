@@ -13,12 +13,15 @@ dependencies = [
     "polars>=1.25.2",
     "pyarrow>=19.0.0",
     "python-dotenv>=1.0.1",
+    "rich>=13.9.4",
     "wikipedia>=1.4.0",
 ]
 
 [dependency-groups]
 dev = [
+    "bs4>=0.0.2",
     "ipykernel>=6.29.5",
+    "requests>=2.32.3",
 ]
 
 [tool.ruff]

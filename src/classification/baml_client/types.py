@@ -40,18 +40,8 @@ def all_succeeded(checks: Dict[CheckName, Check]) -> bool:
 
 
 
-class Genre(str, Enum):
+class Gender(str, Enum):
     
-    SciFi = "SciFi"
-    Romance = "Romance"
-    Historical = "Historical"
-    Fantasy = "Fantasy"
-    Mystery = "Mystery"
-    Horror = "Horror"
-    Thriller = "Thriller"
-    Drama = "Drama"
-    War = "War"
-    Other = "Other"
-
-class Output(BaseModel):
-    genres: List["Genre"]
+    Male = "Male"
+    Female = "Female"
+    Unknown = "Unknown"
