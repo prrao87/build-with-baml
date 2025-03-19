@@ -66,7 +66,7 @@ async def main(
         scholars = scholars[:limit]
 
     # Output file
-    output_file = output_path / "scholars_from_baml_gpt-4o-mini.jsonl"
+    output_file = output_path / "scholars_from_baml_gemma3-test.jsonl"
     error_log_file = output_path / "error_log.txt"
 
     # Delete existing file if refresh is True

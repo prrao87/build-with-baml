@@ -7,7 +7,7 @@ enum Gender {
 
 // Conventional prompting
 function ClassifyGender(info: string) -> Gender {
-  client GTP4oMini
+  client OllamaGemma3_27b
   prompt #"
     Based on your knowledge of historical scholars and scientists, determine the likely gender of this person.
     Scholars who are termed "laureates" won the Nobel Prize in a category.
@@ -23,7 +23,7 @@ function ClassifyGender(info: string) -> Gender {
 
 // Chain-of-Draft (CoD) prompting
 function ClassifyGenderCoD(info: string) -> Gender {
-  client GTP4oMini
+  client OllamaGemma3_27b
   prompt #"
     Based on your knowledge of historical scholars and scientists, determine the likely gender of this person.
     Scholars who are termed "laureates" won the Nobel Prize in a category.

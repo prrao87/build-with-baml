@@ -23,19 +23,22 @@ client<llm> OpenRouterGPT4oMini {
   }
 }
 
-// Custom LLM inference server by YourTechBud
-client<llm> Inferix_Gemma3_27b {
+// Custom LLM inference server by YourTechBud (wrapper for Ollama)
+client<llm> OllamaGemma3_27b {
   provider openai-generic
   options {
     base_url "https://inferix.yourtechbud.studio/inferix/v1/llm"
     api_key env.INFERIX_API_KEY
     model "gemma3:27b"
     max_tokens 500
-    temperature 0.1
+    temperature 1.0
+    top_k 64
+    top_p 0.95
+    min_p 0.0
   }
 }
 
-client<llm> Inferix_Gemma3_12b {
+client<llm> OllamaGemma3_12b {
   provider openai-generic
   options {
     base_url "https://inferix.yourtechbud.studio/inferix/v1/llm"
