@@ -3,6 +3,7 @@ Use BAML to call an LLM API to get gender for a full name.
 
 Runs asynchronously, so make sure to use an LLM API that supports concurrency.
 """
+
 import argparse
 import asyncio
 import json
@@ -20,37 +21,43 @@ os.environ["BAML_LOG"] = "WARN"
 reset_baml_env_vars(dict(os.environ))
 
 
-async def process_batch(batch: List[Dict[str, Any]], output_file: Path, error_log_file: Path, progress, task) -> None:
+async def process_batch(
+    batch: List[Dict[str, Any]], output_file: Path, error_log_file: Path, progress, task
+) -> None:
     """Process a batch of scholars concurrently."""
+
     async def process_and_save(scholar: Dict[str, Any]) -> None:
         try:
             # Format the scholar info for the LLM
-            if scholar.get("category") and scholar.get("year"): 
+            if scholar.get("category") and scholar.get("year"):
                 info = f"name: {scholar['name']}\ninfo: {scholar['year']} {scholar['category']} nobel prize"
             else:
                 info = f"name: {scholar['name']}\ninfo: scholar"
-            
+
             # Call the LLM using the async client
             result = await b.ClassifyGender(info)
             scholar["gender"] = result.value.lower()
-            
+
             # Write result to file
             with open(output_file, "a") as f:
                 f.write(json.dumps(scholar) + "\n")
-                
+
         except Exception as e:
             # Log errors to a separate file
             with open(error_log_file, "a") as f:
                 f.write(f"Error processing {scholar['name']}: {str(e)}\n")
-    
+
     # Process all scholars in the batch concurrently
     tasks = [process_and_save(scholar) for scholar in batch]
     await asyncio.gather(*tasks)
-    
+
     # Update progress after batch completes
     progress.update(task, advance=len(batch))
 
-async def main(data_path: Path, output_path: Path, limit: Optional[int], refresh: bool, batch_size: int) -> None:
+
+async def main(
+    data_path: Path, output_path: Path, limit: Optional[int], refresh: bool, batch_size: int
+) -> None:
     with open(data_path / "scholars.json", "r") as f:
         scholars: List[Dict[str, Any]] = json.load(f)
 
@@ -59,9 +66,9 @@ async def main(data_path: Path, output_path: Path, limit: Optional[int], refresh
         scholars = scholars[:limit]
 
     # Output file
-    output_file = output_path / "scholars_from_baml_gemma3_27b_async.jsonl"
+    output_file = output_path / "scholars_from_baml_gemma3-test.jsonl"
     error_log_file = output_path / "error_log.txt"
-    
+
     # Delete existing file if refresh is True
     if refresh and output_file.exists():
         output_file.unlink()
@@ -75,10 +82,12 @@ async def main(data_path: Path, output_path: Path, limit: Optional[int], refresh
         TimeRemainingColumn(),
     ) as progress:
         task = progress.add_task("[green]Processing scholars...", total=len(scholars))
-        
+
         # Process in batches of specified size
         for i in range(0, len(scholars), batch_size):
-            batch = scholars[i:i+batch_size]  # This handles the final incomplete batch automatically
+            batch = scholars[
+                i : i + batch_size
+            ]  # This handles the final incomplete batch automatically
             await process_batch(batch, output_file, error_log_file, progress, task)
 
     print(f"\nProcessing complete. Results saved to {output_file}")
@@ -119,7 +128,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     data_path = args.data_path
-    output_path = args.output_path if args.output_path else data_path / "with_gender"
+    output_path = args.output_path if args.output_path else data_path / "predicted"
     output_path.mkdir(parents=True, exist_ok=True)
 
     asyncio.run(main(data_path, output_path, args.limit, args.refresh, args.batch_size))
