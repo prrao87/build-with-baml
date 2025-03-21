@@ -45,7 +45,10 @@ client<llm> OllamaGemma3_12b {
     api_key env.INFERIX_API_KEY
     model "gemma3:12b"
     max_tokens 500
-    temperature 0.1
+    temperature 1.0
+    top_k 64
+    top_p 0.95
+    min_p 0.0
   }
 }
 

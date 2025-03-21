@@ -104,12 +104,26 @@ def print_detailed_results(results: List[Dict], show_mismatches: bool = False) -
             print(result["Mismatches"].select(["name", "gender", "gender_right"]))
 
 
-def main(show_mismatches: bool = False):
+def print_mismatches(results: List[Dict]) -> None:
+    """Print only the names that were incorrectly predicted by each model."""
+    for result in results:
+        if result["Mismatches"] is not None and result["Mismatches"].height > 0:
+            print(f"\n{result['Model']} - Incorrect Predictions for Unknown Genders:")
+            mismatches_df = result["Mismatches"].select(["name", "gender", "gender_right"])
+            for row in mismatches_df.iter_rows(named=True):
+                print(f"  {row['name']}: True={row['gender']}, Predicted={row['gender_right']}")
+            print(
+                f"  Total incorrect: {result['Mismatches'].height}/{result['Total']} ({100 - result['Accuracy']:.2f}%)"
+            )
+
+
+def main(show_mismatches: bool = False, show_only_mismatches: bool = False):
     """
     Main function to evaluate model accuracy.
 
     Args:
-        show_mismatches: Whether to print mismatches
+        show_mismatches: Whether to print mismatches in detailed format
+        show_only_mismatches: Whether to print only the incorrect predictions
     """
     # Load all datasets
     datasets = load_datasets()
@@ -125,7 +139,13 @@ def main(show_mismatches: bool = False):
     if show_mismatches:
         print_detailed_results(results, show_mismatches=True)
 
+    # Print only mismatches in a cleaner format
+    if show_only_mismatches:
+        print_mismatches(results)
+
 
 if __name__ == "__main__":
-    # Set to True to show mismatches
-    main(show_mismatches=False)
+    # Set parameters for output
+    show_mismatches = False
+    show_only_mismatches = True
+    main(show_mismatches=show_mismatches, show_only_mismatches=show_only_mismatches)
