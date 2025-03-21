@@ -23,7 +23,7 @@ function ClassifyGender(info: string) -> Gender {
 
 // Chain-of-Draft (CoD) prompting
 function ClassifyGenderCoD(info: string) -> Gender {
-  client OllamaGemma3_27b
+  client GTP4oMini
   prompt #"
     Based on your knowledge of historical scholars and scientists, determine the likely gender of this person.
     Scholars who are termed "laureates" won the Nobel Prize in a category.
@@ -92,9 +92,9 @@ test ClassifyAimeCotton {
   }
 }
 
-test ClassifyLeonorMichaelis {
+test ClassifyMerleBattiste {
   functions [ClassifyGenderCoD]
   args {
-    info "name: Leonor Michaelis\ninfo: scholar"
+    info "name: Merle Battiste\ninfo: scholar"
   }
 }

@@ -168,6 +168,54 @@ def print_accuracy_table(
             print("-" * 45)
 
 
+def print_female_laureates_by_category(
+    datasets: Dict[str, pl.DataFrame], categories: List[str]
+) -> None:
+    """Print the names of female laureates identified by each method in each category."""
+    print("\n==== Female Laureates by Category ====")
+
+    for category in categories:
+        print(f"\n## {category} ##")
+
+        # Get reference names
+        reference_df = datasets["Hand-annotated"].filter(pl.col("category") == category)
+        reference_names = reference_df["name"].to_list()
+
+        print(f"\nHand-annotated ({len(reference_names)}):")
+        for name in sorted(reference_names):
+            print(f"  {name}")
+
+        # Print names identified by each model
+        for model_name, model_df in datasets.items():
+            if model_name == "Hand-annotated":
+                continue
+
+            female_laureates = model_df.filter(
+                (pl.col("category") == category)
+                & (pl.col("gender") == "female")
+                & (pl.col("type") == "laureate")
+            )
+
+            model_names = female_laureates["name"].to_list()
+
+            # Find names that were incorrectly predicted (not in reference)
+            incorrect_predictions = [name for name in model_names if name not in reference_names]
+            # Find names that were missed (in reference but not predicted)
+            missed_predictions = [name for name in reference_names if name not in model_names]
+
+            print(f"\n{model_name} ({len(model_names)}):")
+            for name in sorted(model_names):
+                if name not in reference_names:
+                    print(f"  {name} [INCORRECT]")
+                else:
+                    print(f"  {name}")
+
+            if missed_predictions:
+                print(f"\n  {model_name} missed these laureates:")
+                for name in sorted(missed_predictions):
+                    print(f"  - {name}")
+
+
 def compare_gender_results(
     reference_path: str,
     genderapi_path: str,
@@ -175,6 +223,7 @@ def compare_gender_results(
     llm2_path: str,
     llm3_path: str,
     categories: Optional[List[str]] = None,
+    print_names: bool = False,
 ) -> None:
     """
     Compare gender identification results between reference data, rule-based API, and LLM.
@@ -186,6 +235,7 @@ def compare_gender_results(
         llm2_path: Path to the second LLM results (JSONL)
         llm3_path: Path to the third LLM results (JSONL)
         categories: List of categories to compare (defaults to Physics, Chemistry, etc.)
+        print_names: Whether to print individual laureate names
     """
     if categories is None:
         categories = ["Physics", "Chemistry", "Physiology or Medicine", "Economic Sciences"]
@@ -200,6 +250,10 @@ def compare_gender_results(
     # Print the new accuracy table
     print_accuracy_table(datasets, categories)
 
+    # Print individual laureate names if requested
+    if print_names:
+        print_female_laureates_by_category(datasets, categories)
+
 
 if __name__ == "__main__":
     compare_gender_results(
@@ -208,4 +262,5 @@ if __name__ == "__main__":
         llm1_path="../../data/nobel_laureates/predicted/scholars_from_baml_gpt-4o-mini.jsonl",
         llm2_path="../../data/nobel_laureates/predicted/scholars_from_baml_gemma3_12b.jsonl",
         llm3_path="../../data/nobel_laureates/predicted/scholars_from_baml_gemma3_27b.jsonl",
+        print_names=True,  # Enable printing of individual names
     )
