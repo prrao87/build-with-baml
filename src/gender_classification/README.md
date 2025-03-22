@@ -64,7 +64,7 @@ uv run eval_random_scholars.py
 uv run eval_unknown.py
 ```
 
-See the [blog post](https://thedataquarry.com/blog/can-llms-be-used-to-enrich-datasets) for a deep
+See the [blog post](https://thedataquarry.com/blog/using-llms-to-enrich-datasets) for a deep
 dive into the evaluation results.
 
 
